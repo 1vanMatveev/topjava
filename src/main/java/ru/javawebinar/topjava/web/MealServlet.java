@@ -41,7 +41,7 @@ public class MealServlet extends HttpServlet {
             case "new":
                 log.debug("redirect to editMeal (new)");
                 req.setAttribute("action_name","New");
-                meal = new Meal(0,LocalDateTime.now(),"",0);
+                meal = new Meal(0,LocalDateTime.now().withNano(0).withSecond(0),"",0);
                 req.setAttribute("meal",meal);
                 req.getRequestDispatcher("/editMeal.jsp").forward(req,resp);
                 break;
