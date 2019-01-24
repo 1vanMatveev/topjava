@@ -16,6 +16,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <h2>Meals</h2>
+<a href="meals?action=new">Add meal</a>
 <form id="MealViewForm" action="meals" method="post">
 <table border="1" cellspacing="0" cellpadding="6">
 
@@ -24,7 +25,7 @@
         <th>Description</th>
         <th>Calories</th>
         <th></th>
-        <th><input type="submit" name="action_new" value="New"></th>
+        <th></th>
     </tr>
     <c:forEach items="${meals}" var="meal">
         <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
@@ -39,10 +40,10 @@
                 ${meal.calories}
             </td>
             <td>
-                <input type="submit" name="action_update_${meal.id}" value="Update">
+                <a href="meals?action=update&id=${meal.id}">Update</a>
             </td>
             <td>
-                <input type="submit" name="action_remove_${meal.id}" value="Remove">
+                <a href="meals?action=remove&id=${meal.id}">Remove</a>
             </td>
         </tr>
     </c:forEach>

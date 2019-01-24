@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -27,82 +28,51 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        Action action = getAction(req);
-        Meal meal;
-
-        switch (action.name) {
-            case "update":
-                log.debug("Update meal with id = " + action.id);
-                req.setAttribute("action_name","Update");
-                meal = repository.get(action.id);
-                req.setAttribute("meal",meal);
-                req.getRequestDispatcher("/editMeal.jsp").forward(req,resp);
-                break;
-            case "new":
-                log.debug("New meal");
-                req.setAttribute("action_name","New");
-                meal = new Meal(0,LocalDateTime.now().withNano(0).withSecond(0),"",0);
-                req.setAttribute("meal",meal);
-                req.getRequestDispatcher("/editMeal.jsp").forward(req,resp);
-                break;
-            case "remove":
-                log.debug("Remove meal with id = " + action.id);
-                repository.remove(action.id);
-                doGet(req,resp);
-                break;
-            case "save":
-                log.debug("Save meal");
-                meal = new Meal(action.id,action.dateTime,action.description,action.calories);
-                repository.save(meal);
-                doGet(req,resp);
-        }
+        log.info("Save meal");
+        repository.save(new Meal(getId(req),
+                                 LocalDateTime.parse(req.getParameter("dateTime")),
+                                 req.getParameter("description"),
+                                 Integer.parseInt(req.getParameter("calories"))));
+        resp.sendRedirect("meals");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.debug("Meal list");
-
-        List<MealWithExceed> meals = MealsUtil.getWithExceeded(repository.getAll(),MealsUtil.DEFAULT_CALORIES_PER_DAY);
-        req.setAttribute("meals",meals);
-        
-        req.getRequestDispatcher("/meals.jsp").forward(req,resp);
-    }
-
-    private class Action{
-        String name;
+        String action = req.getParameter("action");
+        action = action == null ? "all" : action;
         int id;
-        String description;
-        LocalDateTime dateTime;
-        int calories;
+        switch (action){
+            case "remove":
+                id = getId(req);
+                log.info("Remove meal with id = {}", id);
+                repository.remove(id);
+                resp.sendRedirect("meals");
+                break;
+            case "update":
+                id = getId(req);
+                log.info("Update meal with id = {}", id);
+                req.setAttribute("meal",repository.get(id));
+                req.setAttribute("title", "Update meal");
+                req.getRequestDispatcher("/mealForm.jsp").forward(req,resp);
+                break;
+            case "new":
+                log.info("Create new meal");
+                req.setAttribute("meal", new Meal(0,LocalDateTime.now().withSecond(0).withNano(0),"",null));
+                req.setAttribute("title", "Create meal");
+                req.getRequestDispatcher("/mealForm.jsp").forward(req,resp);
+                break;
+            case "all":
+            default:
+                log.info("Get meal list");
+                req.setAttribute("meals",MealsUtil.getWithExceeded(repository.getAll(),MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                req.getRequestDispatcher("/meals.jsp").forward(req,resp);
+                break;
+        }
     }
 
-    private Action getAction(HttpServletRequest req) throws IOException{
-        Enumeration<String> parameterNames = req.getParameterNames();
-        String param = "";
-        while (parameterNames.hasMoreElements()){
-            param = parameterNames.nextElement();
-            if (param.startsWith("action")) break;
-        }
-        if (param.equals("")) throw new IOException("Не найден параметр action");
-        Action action = new Action();
-        if (param.startsWith("action_update") ){
-            action.id = Integer.parseInt(param.substring(param.lastIndexOf("_")+1));
-            action.name = "update";
-
-        }else if(param.startsWith("action_remove")){
-            action.id = Integer.parseInt(param.substring(param.lastIndexOf("_")+1));
-            action.name = "remove";
-        }else if(param.startsWith("action_save")){
-            action.name = "save";
-            action.id = Integer.parseInt(req.getParameter("id"));
-            action.description = req.getParameter("description");
-            action.dateTime = LocalDateTime.parse(req.getParameter("dateTime"));
-            action.calories = Integer.parseInt(req.getParameter("calories"));
-        }else if(param.startsWith("action_new")){
-            action.name = "new";
-        }else{
-            throw new IOException("Не верное значение параметра action");
-        }
-        return action;
+    private int getId(HttpServletRequest req){
+        Objects.requireNonNull(req.getParameter("id"));
+        return Integer.parseInt(req.getParameter("id"));
     }
+
 }
