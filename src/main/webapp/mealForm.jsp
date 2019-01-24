@@ -22,6 +22,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <h2>${title}</h2>
+<hr>
 <form method="post" action="meals">
     <input type="hidden" name="id" value="${meal.id}">
     <dl>
@@ -37,7 +38,7 @@
         <dd><input type="text" name="calories" value="${meal.calories}" required></dd>
     </dl>
 <input type="submit" value="Save">
-<input type="button" onclick="window.history.back()" value="Back">
+<input type="button" onclick="window.history.back()" value="Cancel">
 </form>
 </body>
 </html>

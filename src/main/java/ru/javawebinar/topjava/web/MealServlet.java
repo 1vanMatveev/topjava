@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealWithExceed;
 import ru.javawebinar.topjava.repository.MemoryRepository;
 import ru.javawebinar.topjava.repository.Repository;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -14,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -28,8 +26,9 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        log.info("Save meal");
-        repository.save(new Meal(getId(req),
+        int id = getId(req);
+        log.info(id != 0 ? "Save meal with id = {}" : "Save new meal", id);
+        repository.save(new Meal(id,
                                  LocalDateTime.parse(req.getParameter("dateTime")),
                                  req.getParameter("description"),
                                  Integer.parseInt(req.getParameter("calories"))));
@@ -50,14 +49,14 @@ public class MealServlet extends HttpServlet {
                 break;
             case "update":
                 id = getId(req);
-                log.info("Update meal with id = {}", id);
+                log.info("Edit meal with id = {}", id);
                 req.setAttribute("meal",repository.get(id));
-                req.setAttribute("title", "Update meal");
+                req.setAttribute("title", "Edit meal");
                 req.getRequestDispatcher("/mealForm.jsp").forward(req,resp);
                 break;
             case "new":
                 log.info("Create new meal");
-                req.setAttribute("meal", new Meal(0,LocalDateTime.now().withSecond(0).withNano(0),"",null));
+                req.setAttribute("meal", new Meal(0,LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),"",null));
                 req.setAttribute("title", "Create meal");
                 req.getRequestDispatcher("/mealForm.jsp").forward(req,resp);
                 break;
