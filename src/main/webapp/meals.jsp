@@ -34,18 +34,14 @@
         </th>
     </tr>
     <c:forEach items="${meals}" var="meal">
-        <c:if test="${meal.exceed}">
-            <tr class="Exceeded">
-        </c:if>
-        <c:if test="${!meal.exceed}">
-            <tr>
-        </c:if>
+
+        ${meal.exceed ? '<tr class="Exceeded">' : '<tr>'}
 
             <td>
                 <c:out value="${meal.description}"/>
             </td>
             <td>
-                <c:out value="${f:formatLocalDateTime(meal.dateTime,'yyyy-MM-dd HH:mm')}"/>
+                <c:out value="${f:formatLocalDateTime(meal.dateTime)}"/>
             </td>
             <td>
                 <c:out value="${meal.calories}"/>
