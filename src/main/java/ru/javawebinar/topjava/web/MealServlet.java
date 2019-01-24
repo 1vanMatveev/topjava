@@ -32,26 +32,26 @@ public class MealServlet extends HttpServlet {
 
         switch (action.name) {
             case "update":
-                log.debug("redirect to editMeal (update)");
+                log.debug("Update meal with id = " + action.id);
                 req.setAttribute("action_name","Update");
                 meal = repository.get(action.id);
                 req.setAttribute("meal",meal);
                 req.getRequestDispatcher("/editMeal.jsp").forward(req,resp);
                 break;
             case "new":
-                log.debug("redirect to editMeal (new)");
+                log.debug("New meal");
                 req.setAttribute("action_name","New");
                 meal = new Meal(0,LocalDateTime.now().withNano(0).withSecond(0),"",0);
                 req.setAttribute("meal",meal);
                 req.getRequestDispatcher("/editMeal.jsp").forward(req,resp);
                 break;
             case "remove":
-                log.debug("remove meal with id = " + action.id);
+                log.debug("Remove meal with id = " + action.id);
                 repository.remove(action.id);
                 doGet(req,resp);
                 break;
             case "save":
-                log.debug("save meal");
+                log.debug("Save meal");
                 meal = new Meal(action.id,action.dateTime,action.description,action.calories);
                 repository.save(meal);
                 doGet(req,resp);
@@ -60,9 +60,9 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.debug("redirect to meals");
+        log.debug("Meal list");
 
-        List<MealWithExceed> meals = MealsUtil.getWithExceeded(repository.getAll(),MealsUtil.defaultCalories);
+        List<MealWithExceed> meals = MealsUtil.getWithExceeded(repository.getAll(),MealsUtil.DEFAULT_CALORIES_PER_DAY);
         req.setAttribute("meals",meals);
         
         req.getRequestDispatcher("/meals.jsp").forward(req,resp);
