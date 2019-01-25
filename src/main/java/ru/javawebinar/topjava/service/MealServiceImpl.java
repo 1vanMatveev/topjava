@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
+
+
 @Service
 public class MealServiceImpl implements MealService {
 
@@ -21,32 +24,32 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<Meal> getAll() {
-        return null;
+    public List<Meal> getAll(int userId) {
+        return repository.getAll(userId);
     }
 
     @Override
-    public List<Meal> getFiltered(LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate) {
-        return null;
+    public List<Meal> getFiltered(LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate, int userId) {
+        return repository.getFiltered(startTime,endTime,startDate,endDate,userId);
     }
 
     @Override
-    public Meal create(Meal meal) {
-        return null;
+    public Meal create(Meal meal, int userId) {
+        return repository.save(meal, userId);
     }
 
     @Override
-    public void delete(int id) throws NotFoundException {
-
+    public void delete(int id, int userId) throws NotFoundException {
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
     @Override
-    public void update(Meal meal) throws NotFoundException {
-
+    public void update(Meal meal, int userId) throws NotFoundException {
+        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
     @Override
-    public Meal get(int id) throws NotFoundException {
-        return null;
+    public Meal get(int id, int userId) throws NotFoundException {
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 }
