@@ -18,11 +18,7 @@ public class UserServlet extends HttpServlet {
         int userId = Integer.parseInt(req.getParameter("userId"));
         log.debug("change userId to {}", userId);
         SecurityUtil.setAuthUserId(userId);
-        if (userId != 0){
-            resp.sendRedirect("meals");
-        } else{
-            resp.sendRedirect("index.html");
-        }
+        resp.sendRedirect("meals");
     }
 
     @Override
