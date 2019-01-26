@@ -14,12 +14,72 @@
         .exceeded {
             color: red;
         }
+        dl {
+            background: none repeat scroll 0 0 #FAFAFA;
+            margin: 8px 0;
+            padding: 0;
+        }
+
+        dt {
+            display: inline-block;
+            width: 100px;
+        }
+
+        dd {
+            display: inline-block;
+            margin-left: 8px;
+            vertical-align: top;
+        }
+        #button_container{
+            text-align: right;
+        }
     </style>
 </head>
 <body>
 <section>
     <h3><a href="index.html">Home</a></h3>
     <h2>Meals</h2>
+    <form name="filter" method="get" action="meals">
+        <input type="hidden" name="action" value="filter">
+        <table>
+            <tr>
+                <td>
+                    <dl>
+                        <dt>From date:</dt>
+                        <dd><input type="date" value="${dateFrom}" name="dateFrom"></dd>
+                    </dl>
+                </td>
+                <td>
+                    <dl>
+                        <dt>To date:</dt>
+                        <dd><input type="date" value="${dateTo}" name="dateTo"></dd>
+                    </dl>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <dl>
+                        <dt>From time:</dt>
+                        <dd><input type="time" value="${timeFrom}" name="timeFrom"></dd>
+                    </dl>
+                </td>
+                <td>
+                    <dl>
+                        <dt>To time:</dt>
+                        <dd><input type="time" value="${timeTo}" name="timeTo"></dd>
+                    </dl>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="button_container">
+                    <button type="button" onclick="window.location.href='meals'">Clear</button>
+                    <button type="submit">Filter</button>
+                </td>
+            </tr>
+        </table>
+
+    </form>
     <a href="meals?action=create">Add Meal</a>
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">

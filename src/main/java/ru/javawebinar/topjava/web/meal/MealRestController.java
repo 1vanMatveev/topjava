@@ -32,7 +32,7 @@ public class MealRestController {
 
     public List<MealWithExceed> getAll(){
         log.info("getAll");
-        return MealsUtil.getWithExceeded(service.getAll(SecurityUtil.authUserId()),SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getWithExceeded(service.getAll(SecurityUtil.getAuthUserId()),SecurityUtil.authUserCaloriesPerDay());
     }
 
     public List<MealWithExceed> getFiltered(String startTime, String endTime, String startDate, String endDate){
@@ -41,31 +41,31 @@ public class MealRestController {
         LocalTime ltEnd = endTime.trim().isEmpty() ? LocalTime.MAX : LocalTime.parse(endTime);
         LocalDate ldStart = startDate.trim().isEmpty() ? LocalDate.MIN : LocalDate.parse(startDate);
         LocalDate ldEnd = endDate.trim().isEmpty() ? LocalDate.MAX : LocalDate.parse(endDate);
-        return MealsUtil.getWithExceeded(service.getFiltered(ltStart,ltEnd,ldStart,ldEnd, SecurityUtil.authUserId()),SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getWithExceeded(service.getFiltered(ltStart,ltEnd,ldStart,ldEnd, SecurityUtil.getAuthUserId()),SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal get(int id){
         log.info("get {}", id);
-        return service.get(id, SecurityUtil.authUserId());
+        return service.get(id, SecurityUtil.getAuthUserId());
     }
 
     public Meal create(Meal meal){
         log.info("create {}",meal);
         checkNew(meal);
-        checkUserId(meal,SecurityUtil.authUserId());
-        return service.create(meal, SecurityUtil.authUserId());
+        checkUserId(meal,SecurityUtil.getAuthUserId());
+        return service.create(meal, SecurityUtil.getAuthUserId());
     }
 
     public void delete(int id){
         log.info("delete {}", id);
-        service.delete(id, SecurityUtil.authUserId());
+        service.delete(id, SecurityUtil.getAuthUserId());
     }
 
     public void update(Meal meal, int id){
         log.info("update {} with id = {}", meal, id);
         assureIdConsistent(meal,id);
-        checkUserId(meal,SecurityUtil.authUserId());
-        service.update(meal, SecurityUtil.authUserId());
+        checkUserId(meal,SecurityUtil.getAuthUserId());
+        service.update(meal, SecurityUtil.getAuthUserId());
     }
 
 

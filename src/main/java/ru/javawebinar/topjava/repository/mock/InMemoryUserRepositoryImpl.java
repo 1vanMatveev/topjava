@@ -21,7 +21,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        save(new User(1,"Admin", "admin@mail.ru", "admin", Role.ROLE_ADMIN));
+        save(new User(1,"Petya", "petya@mail.ru", "petya", Role.ROLE_USER));
         save(new User(2,"Vasya", "vasya@mail.ru", "vasya", Role.ROLE_USER));
     }
 
@@ -50,7 +50,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        return repository.values().stream().sorted(Comparator.comparing(AbstractNamedEntity::getName)).collect(Collectors.toList());
+        return repository.values().stream().sorted(Comparator.comparing(User::getName).thenComparing(User::getRegistered)).collect(Collectors.toList());
     }
 
     @Override
