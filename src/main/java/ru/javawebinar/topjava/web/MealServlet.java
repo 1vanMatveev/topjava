@@ -75,10 +75,6 @@ public class MealServlet extends HttpServlet {
                 String timeFrom = request.getParameter("timeFrom");
                 String timeTo = request.getParameter("timeTo");
                 log.info("getFiltered: dateFrom = {}, dateTo = {}, timeFrom = {}, timeTo = {}", dateFrom, dateTo, timeFrom, timeTo);
-                request.setAttribute("dateFrom",dateFrom);
-                request.setAttribute("dateTo",dateTo);
-                request.setAttribute("timeFrom",timeFrom);
-                request.setAttribute("timeTo",timeTo);
                 request.setAttribute("meals", controller.getFiltered(timeFrom,timeTo,dateFrom,dateTo));
                 request.getRequestDispatcher("/meals.jsp").forward(request,response);
             case "all":

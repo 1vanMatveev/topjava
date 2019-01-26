@@ -6,34 +6,7 @@
 <html>
 <head>
     <title>Meal list</title>
-    <style>
-        .normal {
-            color: green;
-        }
-
-        .exceeded {
-            color: red;
-        }
-        dl {
-            background: none repeat scroll 0 0 #FAFAFA;
-            margin: 8px 0;
-            padding: 0;
-        }
-
-        dt {
-            display: inline-block;
-            width: 100px;
-        }
-
-        dd {
-            display: inline-block;
-            margin-left: 8px;
-            vertical-align: top;
-        }
-        #button_container{
-            text-align: right;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <section>
@@ -46,13 +19,13 @@
                 <td>
                     <dl>
                         <dt>From date:</dt>
-                        <dd><input type="date" value="${dateFrom}" name="dateFrom"></dd>
+                        <dd><input type="date" value="${param.dateFrom}" name="dateFrom"></dd>
                     </dl>
                 </td>
                 <td>
                     <dl>
                         <dt>To date:</dt>
-                        <dd><input type="date" value="${dateTo}" name="dateTo"></dd>
+                        <dd><input type="date" value="${param.dateTo}" name="dateTo"></dd>
                     </dl>
                 </td>
             </tr>
@@ -60,13 +33,13 @@
                 <td>
                     <dl>
                         <dt>From time:</dt>
-                        <dd><input type="time" value="${timeFrom}" name="timeFrom"></dd>
+                        <dd><input type="time" value="${param.timeFrom}" name="timeFrom"></dd>
                     </dl>
                 </td>
                 <td>
                     <dl>
                         <dt>To time:</dt>
-                        <dd><input type="time" value="${timeTo}" name="timeTo"></dd>
+                        <dd><input type="time" value="${param.timeTo}" name="timeTo"></dd>
                     </dl>
                 </td>
             </tr>
