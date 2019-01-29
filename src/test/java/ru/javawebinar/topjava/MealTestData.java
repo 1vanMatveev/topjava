@@ -23,4 +23,9 @@ public class MealTestData {
             new Meal(FIRST_MEAL_ID + 5,LocalDateTime.of(2019, Month.JANUARY, 3, 18, 0), "Ужин", 510)
     );
 
+    public static final List<Meal> ADMIN_MEALS = Arrays.asList(
+            new Meal(FIRST_MEAL_ID + 2,LocalDateTime.of(2019, Month.JANUARY, 2, 18, 0), "Ужин", 500),
+            new Meal(FIRST_MEAL_ID + 4,LocalDateTime.of(2019, Month.JANUARY, 2, 14, 0), "Обед", 1000)
+    );
+
 }
