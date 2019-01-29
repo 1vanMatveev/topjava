@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,38 +47,32 @@ public class MealServiceTest {
         Meal newMeal = new Meal(LocalDateTime.of(2018, Month.DECEMBER, 25,10,10),"Перекус", 300);
         Meal created = service.create(newMeal, USER_ID);
         newMeal.setId(created.getId());
-        List<Meal> meals = new ArrayList<>(USER_MEALS);
-        meals.add(newMeal);
-        meals = meals.stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
-        assertThat(service.getAll(USER_ID)).isEqualTo(meals);
+        assertThat(service.getAll(USER_ID)).isEqualTo(Arrays.asList(USER_MEAL4,USER_MEAL3, USER_MEAL2, USER_MEAL1, created));
     }
 
     @Test
     public void delete() {
         service.delete(FIRST_MEAL_ID,USER_ID);
-        List<Meal> meals = new ArrayList<>(USER_MEALS);
-        meals.removeIf(meal -> meal.getId() == FIRST_MEAL_ID);
-        meals = meals.stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
-        assertThat(service.getAll(USER_ID)).isEqualTo(meals);
+        assertThat(service.getAll(USER_ID)).isEqualTo(Arrays.asList(USER_MEAL4,USER_MEAL3, USER_MEAL2));
     }
 
     @Test
     public void update() {
-        Meal meal = USER_MEALS.get(0);
+        Meal meal = new Meal(USER_MEAL1);
         meal.setCalories(1300);
         meal.setDescription("Полдник");
         service.update(meal,USER_ID);
-        assertThat(service.get(FIRST_MEAL_ID,USER_ID)).isEqualTo(USER_MEALS.get(0));
+        assertThat(service.get(FIRST_MEAL_ID,USER_ID)).isEqualTo(meal);
     }
 
     @Test
     public void get(){
-        assertThat(service.get(FIRST_MEAL_ID+1,USER_ID)).isEqualTo(USER_MEALS.get(1));
+        assertThat(service.get(FIRST_MEAL_ID+1,USER_ID)).isEqualTo(USER_MEAL2);
     }
 
     @Test
     public void getAll() {
-        assertThat(service.getAll(USER_ID)).isEqualTo(USER_MEALS.stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList()));
+        assertThat(service.getAll(USER_ID)).isEqualTo(Arrays.asList(USER_MEAL4, USER_MEAL3, USER_MEAL2, USER_MEAL1));
     }
 
     @Test
@@ -85,17 +80,15 @@ public class MealServiceTest {
         LocalDate startDate = LocalDate.of(2019,Month.JANUARY,2);
         LocalDate endDate = LocalDate.of(2019,Month.JANUARY,2);
         assertThat(service.getBetweenDates(startDate,endDate,USER_ID))
-                .isEqualTo(USER_MEALS.stream().filter(meal -> Util.isBetween(meal.getDateTime().toLocalDate(),startDate,endDate))
-                        .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList()));
+                .isEqualTo(Arrays.asList(USER_MEAL2,USER_MEAL1));
     }
 
     @Test
     public void getBetweenDateTimes(){
-        LocalDateTime startDT = LocalDateTime.of(2019,Month.JANUARY,2,17,0);
+        LocalDateTime startDT = LocalDateTime.of(2019,Month.JANUARY,2,13,0);
         LocalDateTime endDT = LocalDateTime.of(2019,Month.JANUARY,3,11,0);
         assertThat(service.getBetweenDateTimes(startDT,endDT,USER_ID))
-                .isEqualTo(USER_MEALS.stream().filter(meal -> Util.isBetween(meal.getDateTime(),startDT,endDT))
-                        .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList()));
+                .isEqualTo(Arrays.asList(USER_MEAL3,USER_MEAL2));
 
     }
 
@@ -113,8 +106,7 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void updateForeignMeal(){
-        Meal meal = ADMIN_MEALS.get(0);
-        service.update(meal, USER_ID);
+        service.update(ADMIN_MEAL1, USER_ID);
     }
 
 

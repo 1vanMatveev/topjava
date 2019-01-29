@@ -27,11 +27,12 @@ CREATE TABLE user_roles
 
 create table meals(
   id integer primary key default nextval('global_seq'),
-  dateTime TIMESTAMP NOT NULL ,
+  datetime TIMESTAMP NOT NULL ,
   description VARCHAR NOT NULL ,
   calories INTEGER NOT NULL,
   user_id INTEGER NOT NULL ,
   foreign key (user_id) references users (id) on delete cascade
 );
-create index meals_dateTime_index on meals(dateTime);
+create index meals_dateTime_index on meals(datetime);
 create index meals_user_id_index on meals(user_id);
+create unique index meals_unique_user_datetime_idx on meals (user_id, datetime);
