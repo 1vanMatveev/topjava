@@ -6,7 +6,6 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.jws.soap.SOAPBinding;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
@@ -23,12 +22,16 @@ public class JpaMealRepositoryImpl implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-        User ref = em.getReference(User.class,userId);
-        meal.setUser(ref);
         if (meal.isNew()){
+            User ref = em.getReference(User.class,userId);
+            meal.setUser(ref);
             em.persist(meal);
             return meal;
         } else{
+            Meal oldMeal = em.find(Meal.class, meal.getId());
+            if (oldMeal.getUser().getId() != userId) return null;
+            User ref = em.getReference(User.class,userId);
+            meal.setUser(ref);
             return em.merge(meal);
         }
     }
@@ -41,7 +44,9 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return em.find(Meal.class,id);
+        List<Meal> meals = em.createNamedQuery(Meal.GET,Meal.class).setParameter("id",id).setParameter("user_id",userId).getResultList();
+        if (meals.isEmpty()) return null;
+        return meals.get(0);
     }
 
     @Override

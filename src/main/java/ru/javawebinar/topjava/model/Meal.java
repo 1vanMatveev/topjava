@@ -16,7 +16,8 @@ import java.time.LocalTime;
         @NamedQuery(name = Meal.DELETE, query = "delete from Meal m where m.id=:id and m.user.id=:user_id"),
         @NamedQuery(name = Meal.ALL, query = "select m from Meal m where m.user.id = ?1 order by m.dateTime desc"),
         @NamedQuery(name = Meal.ALL_FILTERED,
-                query = "select m from Meal m where m.user.id =?1 and m.dateTime >=?2 and m.dateTime <=?3 order by m.dateTime desc")
+                query = "select m from Meal m where m.user.id =?1 and m.dateTime >=?2 and m.dateTime <=?3 order by m.dateTime desc"),
+        @NamedQuery(name = Meal.GET, query = "select m from Meal m where m.id=:id and m.user.id=:user_id")
 })
 @Entity
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"date_time","user_id"})})
@@ -25,6 +26,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String ALL = "Meal.all";
     public static final String ALL_FILTERED = "Meal.allFiltered";
     public static final String DELETE = "Meal.delete";
+    public static final String GET = "Meal.get";
 
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
