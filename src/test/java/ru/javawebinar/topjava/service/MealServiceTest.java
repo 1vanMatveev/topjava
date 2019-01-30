@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.service;
 
 import org.junit.*;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -33,6 +35,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
 
     private static Logger log = LoggerFactory.getLogger(MealServiceTest.class);
+    private static long start;
 
     static {
         SLF4JBridgeHandler.install();
@@ -40,30 +43,25 @@ public class MealServiceTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        log.info(MealServiceTest.class.getSimpleName() + ": test start time = " + LocalDateTime.now().toString());
+        start = System.currentTimeMillis();
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        log.info(MealServiceTest.class.getSimpleName() + ": test end time = " + LocalDateTime.now().toString());
+        log.info("All tests finished, spent {} ms", System.currentTimeMillis() - start);
     }
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Rule
-    public TestWatcher watcher = new TestWatcher() {
+    public Stopwatch stopwatch = new Stopwatch() {
         @Override
-        protected void starting(Description description) {
-            log.info(description.getMethodName() + ": test start time = " + LocalDateTime.now().toString());
+        protected void finished(long nanos, Description description) {
+            log.info("Test {} finished, spent {} microseconds", description.getMethodName(), TimeUnit.NANOSECONDS.toMicros(nanos));
         }
-
-        @Override
-        protected void finished(Description description) {
-            log.info(description.getMethodName() + ":  test end time = " + LocalDateTime.now().toString());
-        }
-
     };
+
 
     @Autowired
     private MealService service;
