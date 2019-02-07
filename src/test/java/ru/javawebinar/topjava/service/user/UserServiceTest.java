@@ -1,9 +1,6 @@
 package ru.javawebinar.topjava.service.user;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -71,6 +68,11 @@ public abstract class UserServiceTest {
             log.info(result + " ms\n");
         }
     };
+
+    @BeforeClass
+    public static void cleanResult() {
+        results.setLength(0);
+    }
 
     @AfterClass
     public static void printResult() {

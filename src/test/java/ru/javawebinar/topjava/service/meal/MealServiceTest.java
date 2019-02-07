@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service.meal;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,6 +60,11 @@ public abstract class MealServiceTest {
     static {
         // needed only for java.util.logging (postgres driver)
         SLF4JBridgeHandler.install();
+    }
+
+    @BeforeClass
+    public static void cleanResult() {
+        results.setLength(0);
     }
 
     @AfterClass
