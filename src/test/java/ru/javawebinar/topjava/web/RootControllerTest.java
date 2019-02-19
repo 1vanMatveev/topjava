@@ -1,6 +1,9 @@
 package ru.javawebinar.topjava.web;
 
 import org.junit.jupiter.api.Test;
+import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.TestUtil;
+import ru.javawebinar.topjava.to.MealTo;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,4 +29,28 @@ class RootControllerTest extends AbstractControllerTest {
                         )
                 )));
     }
+
+    @Test
+    void testMeals() throws Exception{
+
+        mockMvc.perform(get("/meals"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("meals"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
+                .andExpect(model().attribute("meals", hasSize(6)))
+                .andExpect(model().attribute("meals", hasItem(instanceOf(MealTo.class))))
+                .andExpect(model().attribute("meals", hasItems(
+                        allOf(hasProperty("id",is(MealTestData.MEAL1_ID)),
+                              hasProperty("description",is(MealTestData.MEAL1.getDescription())),
+                              hasProperty("excess",is(false))),
+                        allOf(hasProperty("id",is(MealTestData.MEAL1_ID+3)),
+                                hasProperty("description",is(MealTestData.MEAL4.getDescription())),
+                                hasProperty("excess",is(true)))
+
+                )))
+                .andExpect(model().attribute("meals", TestUtil.countExcess(3)));
+
+    }
+
 }
