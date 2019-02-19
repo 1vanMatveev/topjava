@@ -3,11 +3,16 @@ package ru.javawebinar.topjava;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static ru.javawebinar.topjava.web.json.JsonUtil.writeIgnoreProps;
 
 public class TestUtil {
 
@@ -50,5 +55,14 @@ public class TestUtil {
                 description.appendText("Count meals with excess = " + count);
             }
         };
+    }
+
+
+    public static <T> ResultMatcher contentJson(List<T> expected, String... ignoreProps){
+        return content().json(writeIgnoreProps(expected, ignoreProps));
+    }
+
+    public static <T> ResultMatcher contentJson(T expected, String... ignoreProps) {
+        return content().json(writeIgnoreProps(expected, ignoreProps));
     }
 }

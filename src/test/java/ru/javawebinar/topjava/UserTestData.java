@@ -31,10 +31,10 @@ public class UserTestData {
     }
 
     public static ResultMatcher contentJson(User... expected) {
-        return content().json(writeIgnoreProps(List.of(expected), "registered"));
+        return TestUtil.contentJson(List.of(expected),"registered");
     }
 
     public static ResultMatcher contentJson(User expected) {
-        return content().json(writeIgnoreProps(expected, "registered"));
+        return TestUtil.contentJson(expected,"registered");
     }
 }
